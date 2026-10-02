@@ -122,7 +122,7 @@ network at test time). `reactor --offline compile --check` skips this because
 the price of using the repo's own gate as the subject — the payoff is a far
 richer, maintainer-relevant diff (suites passing/failing) than a fingerprint hash.
 
-## Sample run (real output)
+## Sample run A — compile check (quick, terse)
 
 A concrete run — A/B-testing OpenProse's own offline compile check across a change
 to the sibling `openprose-wiki-pilot` project, base `5e30c1a` (original contracts)
@@ -160,6 +160,34 @@ The live `ab-run-status.md` ledger ended at:
 This subject's output is deliberately terse — the sample shows the *shape*
 (progress ledger, semantic same/different, signal-vs-noise), not a dramatic diff.
 A real build/test subject produces far richer output.
+
+## Sample run B — conformance gate (richer, maintainer-relevant)
+
+The on-narrative dogfood from "A richer dogfood" above, run for real — an A/B of
+`pnpm test:skill` across `770cebc9` (skill 0.18.0) → `origin/main` (skill 0.18.1).
+Skill-only; keyless (vitest string assertions, no model). Ledger:
+
+```
+1. ✓ produce A (base 770cebc9)  → 19 files, 301 tests passed, exit 0
+2. ✓ produce B (head 0ab7237c)  → 19 files, 304 tests passed, exit 0
+3. ✓ compare A vs B             → report below
+4. ✓ reviewer gate              → no PR, nothing to publish
+```
+
+Report:
+
+> **Verdict:** the change did not break conformance — both refs are fully green;
+> the gate itself grew by 3 checks (the 0.18.1 terminology work). A clean ship-it.
+>
+> **Same:** both pass 19/19 test files, 0 failures, exit 0 — no regression.
+> **Different:** 301 → 304 tests (+3) — new "contract execution terminology /
+> executor-evaluator" conformance assertions.
+> **Noise (flagged, excluded):** duration 447ms vs 415ms (timing) and the worktree
+> paths (`/tmp/conf-base` vs `/tmp/conf-head`, an isolation artifact).
+
+Unlike the terse compile-check above, this is the shape that sells the idea: a
+real before/after on OpenProse's own gate, with the harness separating the +3
+tests (signal) from timing/paths (noise).
 
 ## Roles & conforming behavior
 
