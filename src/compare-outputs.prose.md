@@ -13,6 +13,10 @@ Given the two captured outputs, write a human-readable description of what is th
 cares about, not a raw byte diff. This is the step traditional A/B tooling can't
 do: a semantic, verbal account of the delta.
 
+In OpenProse's executor/evaluator terms, this is the **evaluator**: it assesses
+the delta between the two results and records its findings in `report` — the
+inspectable evidence, not a separate verdict value.
+
 ### Parameters
 
 - `output-a`: the "before" output (from the base ref)

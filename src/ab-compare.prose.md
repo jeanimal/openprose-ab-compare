@@ -18,6 +18,13 @@ imperative ProseScript choreography (order matters: A, then B, then compare, the
 a human gate). There is no world-model, no reconciler, and no receipts — this is
 the language/skill layer, not the reactor harness.
 
+**Roles.** In executor/evaluator terms: `run-at-ref` is the **executor** (it
+produces each result), `compare-outputs` is the **evaluator** (it assesses the
+delta and records evidence), and the reviewer gate is the human fulfillment check
+before anything is recorded on the PR. Each function declares its required result
+(`### Returns`), permitted approach (`### Shape` / `### Strategies`), and evidence
+(the cited `report`).
+
 ### Parameters
 
 - `base-ref`: the "before" ref — the PR's base (see README for the one-liner that

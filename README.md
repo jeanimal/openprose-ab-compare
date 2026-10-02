@@ -139,6 +139,27 @@ This subject's output is deliberately terse — the sample shows the *shape*
 (progress ledger, semantic same/different, signal-vs-noise), not a dramatic diff.
 A real build/test subject produces far richer output.
 
+## Roles & conforming behavior
+
+In OpenProse's **executor / evaluator** terms: `run-at-ref` is the **executor** —
+it performs the work (produces each result); `compare-outputs` is the
+**evaluator** — it assesses the delta between results and records its findings
+(`report`) as the evidence; the reviewer gate is the human fulfillment check
+before the result is recorded on the PR. Each function states its **required
+result** (`### Returns`), **permitted approach** (`### Shape` / `### Strategies`),
+and **evidence** (the cited, inspectable `report`).
+
+A conforming harness or VM running this example must preserve the observable
+behavior the contracts declare:
+
+- run `produce-command` at **each** ref in **isolation** — A and B pinned to SHAs,
+  each in its own worktree, the caller's tree untouched;
+- produce a **semantic same/different** account (not a line diff) that separates
+  real change from run-to-run **noise**;
+- **gate on human approval** before any PR write; with no `pr`, produce the report
+  and stop;
+- keep the `ab-run-status.md` progress ledger current as each stage settles.
+
 ## Notes & honest edges (for reviewers of this example)
 
 - **Nondeterminism** is handled in `compare-outputs`'s strategies: it separates
