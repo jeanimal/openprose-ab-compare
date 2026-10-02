@@ -100,6 +100,28 @@ semantic comparison are far richer.
 > executes the pipeline. (Using a reactor command as the subject is just
 > dogfooding — A/B-testing OpenProse with OpenProse.)
 
+### A richer dogfood: A/B the conformance gate
+
+The most on-narrative subject is OpenProse's own **conformance gate** — "did my
+change break conformance?" It's deterministic and keyless, so the before/after is
+a clean pass/fail:
+
+```
+prose run ab-compare
+  base-ref: <before your change>
+  head-ref: <after your change>
+  produce-command: "pnpm install --frozen-lockfile && pnpm test:skill"
+```
+
+**One-time setup this subject needs (that `compile --check` did not):** the gate
+runs the repo's *own* test suite, so each ref's checkout must have its JavaScript
+dependencies present first — that's what `pnpm install --frozen-lockfile` does
+(fetches the versions pinned in `pnpm-lock.yaml` into `node_modules/`; keyless, no
+network at test time). `reactor --offline compile --check` skips this because
+`reactor` is a globally-installed binary, not a per-repo script. The install is
+the price of using the repo's own gate as the subject — the payoff is a far
+richer, maintainer-relevant diff (suites passing/failing) than a fingerprint hash.
+
 ## Sample run (real output)
 
 A concrete run — A/B-testing OpenProse's own offline compile check across a change
